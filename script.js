@@ -94,6 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentQ = quizData[currentVideoIndex].questions[currentQuestionIndex];
             if (selected === currentQ.correct) {
                 score++;
+                alert("Correct!");
+            } else {
+                alert("Incorrect!");
+
             }
             nextQuestion();
         });
