@@ -29,36 +29,36 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             video: 'vid1.mp4', // Placeholder, replace with actual path
             questions: [
-                { question: "What color is the shirt?", options: ["yellow", "orange", "green", "white"], correct: 0 },
-                { question: "What color is the jacket?", options: ["red", "pink", "maroon", "purple"], correct: 0 },
-                { question: "What color are the pants?", options: ["blue", "navy", "green", "black"], correct: 0 },
-                { question: "What color are the shoes?", options: ["brown", "black", "tan", "gray"], correct: 0 },
-                { question: "What color are the socks?", options: ["black", "gray", "white", "blue"], correct: 0 }
+                { question: "What color is the shirt?", options: ["yellow", "orange", "green", "white"], correct: "yellow" },
+                { question: "What color is the jacket?", options: ["red", "pink", "maroon", "purple"], correct: "red" },
+                { question: "What color are the pants?", options: ["blue", "navy", "green", "black"], correct: "blue" },
+                { question: "What color are the shoes?", options: ["brown", "black", "tan", "gray"], correct: "brown" },
+                { question: "What color are the socks?", options: ["black", "gray", "white", "blue"], correct: "black" }
             ]
         },
         {
             video: 'vid2.mp4',
             questions: [
-                { question: "What color is the shirt?", options: ["blue", "navy", "purple", "green"], correct: 0 },
-                { question: "What color is the skirt?", options: ["purple", "pink", "violet", "blue"], correct: 0 },
-                { question: "What color are the shoes?", options: ["black", "brown", "gray", "white"], correct: 0 },
-                { question: "What color are the socks?", options: ["white", "gray", "beige", "black"], correct: 0 }
+                { question: "What color is the shirt?", options: ["blue", "navy", "purple", "green"], correct: "blue" },
+                { question: "What color is the skirt?", options: ["purple", "pink", "violet", "blue"], correct: "purple" },
+                { question: "What color are the shoes?", options: ["black", "brown", "gray", "white"], correct: "black" },
+                { question: "What color are the socks?", options: ["white", "gray", "beige", "black"], correct: "white" }
             ]
         },
         {
             video: 'vid3.mp4',
             questions: [
-                { question: "What color is the shirt?", options: ["bright green", "dark green", "lime", "yellow"], correct: 0 },
-                { question: "What color are the pants?", options: ["dark red", "maroon", "burgundy", "brown"], correct: 0 },
-                { question: "What color are the shoes?", options: ["gray", "silver", "black", "white"], correct: 0 },
-                { question: "What color are the socks?", options: ["white", "gray", "beige", "black"], correct: 0 }
+                { question: "What color is the shirt?", options: ["bright green", "dark green", "lime", "yellow"], correct: "bright green" },
+                { question: "What color are the pants?", options: ["dark red", "maroon", "burgundy", "brown"], correct: "dark red" },
+                { question: "What color are the shoes?", options: ["gray", "silver", "black", "white"], correct: "black" },
+                { question: "What color are the socks?", options: ["white", "gray", "beige", "black"], correct: "white" }
             ]
         },
         {
             video: 'vid4.mp4',
             questions: [
-                { question: "What color is the dress?", options: ["gold", "yellow", "bronze", "silver"], correct: 0 },
-                { question: "What color are the shoes?", options: ["silver", "gray", "white", "gold"], correct: 0 }
+                { question: "What color is the dress?", options: ["gold", "yellow", "bronze", "silver"], correct: "gold" },
+                { question: "What color are the shoes?", options: ["silver", "gray", "white", "gold"], correct: "silver" }
             ]
         }
     ];
@@ -87,10 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+//Fisher-Yates for the win!
+    function shuffleArray(array) {
+    for (let i = array.length -1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
     // Option click
     options.forEach(option => {
         option.addEventListener('click', (e) => {
-            const selected = parseInt(e.target.dataset.index);
+            const selected = e.target.textContent;
             const currentQ = quizData[currentVideoIndex].questions[currentQuestionIndex];
             if (selected === currentQ.correct) {
                 score++;
@@ -106,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Restart quiz
     restartQuizBtn.addEventListener('click', () => {
         resetQuiz();
-        quizModal.style.display = 'none';
     });
 
     function loadVideo() {
@@ -119,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showQuestion() {
         const currentQ = quizData[currentVideoIndex].questions[currentQuestionIndex];
         questionText.textContent = currentQ.question;
+        shuffleArray(currentQ.options);
         options.forEach((option, index) => {
             option.textContent = currentQ.options[index];
         });
@@ -152,15 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetQuiz() {
-        userName = '';
         currentVideoIndex = 0;
         currentQuestionIndex = 0;
         score = 0;
-        userNameInput.value = '';
-        nameInput.style.display = 'block';
-        quizContent.style.display = 'none';
+        quizContent.style.display = 'block';
         questionArea.style.display = 'block';
         videoContainer.style.display = 'block';
         certificate.style.display = 'none';
+        loadVideo();
     }
 });
